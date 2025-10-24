@@ -13,6 +13,36 @@ namespace BeatPass.Data.Services
             _context = context;
         }
 
+        public async Task AddNewFestivalAsync(NewFestivalVM data)
+        {
+            var newFestival = new Festival()
+            {
+                Name = data.Name,
+                Description = data.Description,
+                Price = data.Price,
+                StartDate = data.StartDate,
+                EndDate = data.EndDate,
+                FestivalCategory = data.FestivalCategory,
+                LocationId = data.LocationId,
+                OrganizationId = data.OrganizationId,
+                Logo = data.Logo
+            };
+            await _context.Festivals.AddAsync(newFestival);
+            await _context.SaveChangesAsync();
+
+            //Add Artists
+            foreach (var artistId in data.ArtistIds)
+            {
+                var newArtistFestival = new Artist_Festival()
+                {
+                    FestivalId = newFestival.Id,
+                    ArtistId = artistId
+                };
+                await _context.Artists_Festivals.AddAsync(newArtistFestival);
+            }
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Festival> GetFestivalByIdAsync(int id)
         {
             var festivalDetails = await _context.Festivals
@@ -35,6 +65,42 @@ namespace BeatPass.Data.Services
             };
 
             return response;
+        }
+
+        public async Task UpdateNewFestivalAsync(NewFestivalVM data)
+        {
+            var dbFestival = await _context.Festivals.FirstOrDefaultAsync(n => n.Id == data.Id);
+
+            if(dbFestival != null)
+            {
+                dbFestival.Name = data.Name;
+                dbFestival.Description = data.Description;
+                dbFestival.Price = data.Price;
+                dbFestival.StartDate = data.StartDate;
+                dbFestival.EndDate = data.EndDate;
+                dbFestival.FestivalCategory = data.FestivalCategory;
+                dbFestival.LocationId = data.LocationId;
+                dbFestival.OrganizationId = data.OrganizationId;
+                dbFestival.Logo = data.Logo;
+
+                await _context.SaveChangesAsync();
+            }
+            //Remove existing Artists
+            var existingArtistsDb = _context.Artists_Festivals.Where(n => n.FestivalId == data.Id).ToList();
+            _context.Artists_Festivals.RemoveRange(existingArtistsDb);
+            await _context.SaveChangesAsync();
+
+            //Add Artists
+            foreach (var artistId in data.ArtistIds)
+            {
+                var newArtistFestival = new Artist_Festival()
+                {
+                    FestivalId = data.Id,
+                    ArtistId = artistId
+                };
+                await _context.Artists_Festivals.AddAsync(newArtistFestival);
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

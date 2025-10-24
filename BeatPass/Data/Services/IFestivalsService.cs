@@ -8,5 +8,7 @@ namespace BeatPass.Data.Services
     {
         Task<Festival> GetFestivalByIdAsync(int id);
         Task<NewFestivalDropdownsVM> GetNewFestivalDropdownsValues();
+        Task AddNewFestivalAsync(NewFestivalVM data);
+        Task UpdateNewFestivalAsync(NewFestivalVM data);
     }
 }

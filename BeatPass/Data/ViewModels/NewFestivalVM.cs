@@ -8,6 +8,7 @@ namespace BeatPass.Models
 {
     public class NewFestivalVM
     {
+        public int Id { get; set; }
 
         [Display(Name = "Festival Name")]
         [Required(ErrorMessage = "Name is required")]
@@ -49,10 +50,5 @@ namespace BeatPass.Models
         [Display(Name = "Select Organization")]
         [Required(ErrorMessage = "Organization is required")]
         public int OrganizationId { get; set; }
-        
-
-
-
-
     }
 }
