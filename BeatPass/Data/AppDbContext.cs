@@ -18,7 +18,7 @@ namespace BeatPass.Data
             modelBuilder.Entity<Artist_Festival>().HasOne(f => f.Festival).WithMany(af => af.Artists_Festivals)
                 .HasForeignKey(f => f.FestivalId);
 
-            
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -27,6 +27,12 @@ namespace BeatPass.Data
         public DbSet<Artist_Festival> Artists_Festivals { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        
+
+
+        //Orders related tables
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+
     }
 }
