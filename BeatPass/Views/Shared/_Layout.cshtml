@@ -24,29 +24,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Festivals" asp-action="Index"><i class="bi bi-ticket-perforated"></i> Festivals</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-gear"></i> Management
-                            </a>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Management
+                                </a>
 
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Locations" asp-action="Index">
-                                        <i class="bi bi-geo-alt"></i> Locations
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Organizations" asp-action="Index">
-                                        <i class="bi bi-people"></i> Organizations
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Artists" asp-action="Index">
-                                        <i class="bi bi-mic"></i> Artists
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Locations" asp-action="Index"><i class="bi bi-camera-reels"></i> Locations</a>
+                                    <a class="dropdown-item" asp-controller="Organizations" asp-action="Index"><i class="bi bi-headset"></i> Organizations</a>
+                                    <a class="dropdown-item" asp-controller="Artists" asp-action="Index"><i class="bi bi-person-square"></i> Artists</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                     <form class="d-flex" asp-controller="Festivals" asp-action="Filter" style="padding-right: 25px;">
                         <input name="searchString" type="text" class="form-control" placeholder="Search for a festival..." aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -57,20 +48,7 @@
                         @await Component.InvokeAsync("ShoppingCartSummary")
                     </ul>
 
-                    @*User profile section*@
-                    <div class="dropdown">
-                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="profile-btn" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            <i class="bi bi-person-badge"></i> Hello User
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="profile-btn">
-                            <li>
-                                <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
-                                    <i class="bi bi-list"></i> Orders
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <partial name="_Identity.cshtml" />
 
                 </div>
             </div>
