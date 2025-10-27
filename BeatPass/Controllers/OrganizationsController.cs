@@ -1,5 +1,6 @@
 ﻿using BeatPass.Data;
 using BeatPass.Data.Services;
+using BeatPass.Data.Static;
 using BeatPass.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BeatPass.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = UserRoles.Admin)]
     public class OrganizationsController : Controller
     {
         private readonly IOrganizationsService _service;

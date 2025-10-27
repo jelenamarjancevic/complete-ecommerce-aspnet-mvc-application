@@ -1,5 +1,6 @@
 ﻿using BeatPass.Data;
 using BeatPass.Data.Services;
+using BeatPass.Data.Static;
 using BeatPass.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeatPass.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = UserRoles.Admin)]
     public class FestivalsController : Controller
     {
         private readonly IFestivalsService _service;
@@ -39,6 +40,7 @@ namespace BeatPass.Controllers
 
             return View("Index", allFestivals);
         }
+
 
         //GET: Festivals/Details/1
         [AllowAnonymous]
@@ -122,6 +124,28 @@ namespace BeatPass.Controllers
             }
 
             await _service.UpdateNewFestivalAsync(festival);
+            return RedirectToAction(nameof(Index));
+        }
+
+        //GET: Arrangements/Delete/1
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var arrangementDetails = await _service.GetFestivalByIdAsync(id);
+            if (arrangementDetails == null) return View("NotFound");
+
+            return View(arrangementDetails);
+        }
+
+        //POST: Arrangements/Delete/1
+        [HttpPost, ActionName("Delete")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var arrangementDetails = await _service.GetFestivalByIdAsync(id);
+            if (arrangementDetails == null) return View("NotFound");
+
+            await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

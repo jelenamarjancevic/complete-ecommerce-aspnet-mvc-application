@@ -82,17 +82,37 @@ namespace BeatPass.Controllers
             };
             var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
 
+            //prvobitno
+            //if (newUserResponse.Succeeded)
+            //    await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+            //privremeno-ipak bolje jer ispise greske ako ih ima
             if (newUserResponse.Succeeded)
+            {
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+                return View("RegisterCompleted");
+            }
+            else
+            {
+                // Ispiši sve greške koje Identity vraća
+                string errors = string.Join(", ", newUserResponse.Errors.Select(e => e.Description));
+                TempData["Error"] = "Registration failed: " + errors;
+                return View(registerVM);
+            }
 
-            return View("RegisterCompleted");
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Session.Clear(); 
+
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Festivals");
+        }
+
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            return View();
         }
     }
 }

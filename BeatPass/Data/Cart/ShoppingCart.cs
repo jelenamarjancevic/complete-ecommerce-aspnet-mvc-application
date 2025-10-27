@@ -18,9 +18,19 @@ namespace BeatPass.Data.Cart
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
             var context = services.GetService<AppDbContext>();
+            var httpContext = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext;
 
-            string cartId = session.GetString("CartId") ?? Guid.NewGuid().ToString();
-            session.SetString("CartId", cartId);
+            string cartId;
+
+            if (httpContext.User.Identity.IsAuthenticated)
+            {
+                cartId = httpContext.User.Identity.Name; // unique per logged user
+            }
+            else
+            {
+                cartId = session.GetString("CartId") ?? Guid.NewGuid().ToString();
+                session.SetString("CartId", cartId);
+            }
 
             return new ShoppingCart(context) { ShoppingCartId = cartId };
         }

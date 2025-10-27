@@ -1,5 +1,6 @@
 ﻿using BeatPass.Data.Cart;
 using BeatPass.Data.Services;
+using BeatPass.Data.Static;
 using BeatPass.Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
