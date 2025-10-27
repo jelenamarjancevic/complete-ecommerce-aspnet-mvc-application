@@ -1,12 +1,14 @@
 ﻿using BeatPass.Data;
 using BeatPass.Data.Services;
 using BeatPass.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatPass.Controllers
 {
+    [Authorize]
     public class FestivalsController : Controller
     {
         private readonly IFestivalsService _service;
@@ -14,6 +16,8 @@ namespace BeatPass.Controllers
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var allFestivals = await _service.GetAllAsync(n=>n.Location);
@@ -21,6 +25,7 @@ namespace BeatPass.Controllers
             return View(allFestivals);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
         {
             var allFestivals = await _service.GetAllAsync(n => n.Location);
@@ -36,6 +41,7 @@ namespace BeatPass.Controllers
         }
 
         //GET: Festivals/Details/1
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var festivalDetail = await _service.GetFestivalByIdAsync(id);

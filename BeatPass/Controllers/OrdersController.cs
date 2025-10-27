@@ -1,10 +1,13 @@
 ﻿using BeatPass.Data.Cart;
 using BeatPass.Data.Services;
 using BeatPass.Data.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BeatPass.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IFestivalsService _festivalsService;
@@ -19,9 +22,10 @@ namespace BeatPass.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string userId = "";
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userRole = User.FindFirstValue(ClaimTypes.Role);
 
-            var orders = await _ordersService.GetOrdersByUserIdAsync(userId);
+            var orders = await _ordersService.GetOrdersByUserIdAndRoleAsync(userId, userRole);
             return View(orders);
         }
 
@@ -62,8 +66,8 @@ namespace BeatPass.Controllers
         public async Task<IActionResult> CompleteOrder()
         {
             var items = _shoppingCart.GetShoppingCartItems();
-            string userId = ""; //TODO: Get user id
-            string userEmailAddress = ""; //TODO: Get user email address
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+            string userEmailAddress = User.FindFirstValue(ClaimTypes.Email); 
 
             await _ordersService.StoreOrderAsync(items, userId, userEmailAddress);
             await _shoppingCart.ClearShoppingCartAsync();

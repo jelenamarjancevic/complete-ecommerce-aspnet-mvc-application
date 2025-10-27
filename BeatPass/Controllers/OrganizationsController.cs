@@ -1,12 +1,14 @@
 ﻿using BeatPass.Data;
 using BeatPass.Data.Services;
 using BeatPass.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace BeatPass.Controllers
 {
+    [Authorize]
     public class OrganizationsController : Controller
     {
         private readonly IOrganizationsService _service;
@@ -14,12 +16,15 @@ namespace BeatPass.Controllers
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var allOrganizations = await _service.GetAllAsync();
             return View(allOrganizations);
         }
 
+        [AllowAnonymous]
         //GET: Organizations/Details/1
         public async Task<IActionResult> Details(int id)
         {
@@ -77,15 +82,6 @@ namespace BeatPass.Controllers
             return View(organizationDetails);
         }
 
-        //[HttpPost, ActionName("Delete")]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var organizationDetails = await _service.GetByIdAsync(id);
-        //    if (organizationDetails == null) return View("NotFound");
-
-        //    await _service.DeleteAsync(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)

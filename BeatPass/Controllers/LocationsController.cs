@@ -1,11 +1,13 @@
 ﻿using BeatPass.Data;
 using BeatPass.Data.Services;
 using BeatPass.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatPass.Controllers
 {
+    [Authorize]
     public class LocationsController : Controller
     {
         private readonly ILocationsService _service;
@@ -13,6 +15,8 @@ namespace BeatPass.Controllers
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var allLocations = await _service.GetAllAsync();
@@ -36,6 +40,8 @@ namespace BeatPass.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //Details
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var locationDetails = await _service.GetByIdAsync(id);
