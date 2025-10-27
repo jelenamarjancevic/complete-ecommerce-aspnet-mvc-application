@@ -1,0 +1,9 @@
+﻿# Ignore static frontend files in language stats
+*.css linguist-detectable=false
+*.scss linguist-detectable=false
+*.js linguist-detectable=false
+*.html linguist-detectable=false
+
+# Count C# and Razor files correctly
+*.cs linguist-language=C#
+*.cshtml linguist-language=HTML
